@@ -1,5 +1,5 @@
 # Application web Vote-Animes
-##  API Symfony + Structur Angular
+##  API Symfony 
 
 ### Objectifs :
 - Création de Compte / Connexion
