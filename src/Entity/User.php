@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
@@ -11,19 +12,26 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:sign'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:sign'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:sign'])]
     private ?string $pseudo = null;
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $token = null;
+//    #[ORM\Column(length: 255, nullable: true)]
+//    #[Groups(['user:sign'])]
+//    private ?string $token = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
     private array $roles = [];
@@ -33,19 +41,19 @@ class User
         return $this->id;
     }
 
-    #[ORM\Column(length: 255)]
-    private ?string $salt = null;
-
-    public function getSalt(): ?string
-    {
-        return $this->salt;
-    }
-
-    public function setSalt(string $salt): static
-    {
-        $this->salt = $salt;
-        return $this;
-    }
+//    #[ORM\Column(length: 255)]
+//    private ?string $salt = null;
+//
+//    public function getSalt(): ?string
+//    {
+//        return $this->salt;
+//    }
+//
+//    public function setSalt(string $salt): static
+//    {
+//        $this->salt = $salt;
+//        return $this;
+//    }
 
     public function getEmail(): ?string
     {
@@ -90,27 +98,41 @@ class User
         return $this;
     }
 
-    public function getToken(): ?string
-    {
-        return $this->token;
-    }
-
-    public function setToken(?string $token): static
-    {
-        $this->token = $token;
-
-        return $this;
-    }
+//    public function getToken(): ?string
+//    {
+//        return $this->token;
+//    }
+//
+//    public function setToken(?string $token): static
+//    {
+//        $this->token = $token;
+//
+//        return $this;
+//    }
 
     public function getRoles(): array
     {
+
+        $this->roles[] = "ROLE_USER";
         return $this->roles;
+
     }
 
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
 
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
         return $this;
     }
 }

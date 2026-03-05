@@ -14,6 +14,7 @@ final class AuthController extends AbstractController
 {
     public function __construct(private UserRepository $userRepo){}
 
+
     #[Route('/user/sign', name: 'app_auth_sign', methods: ['POST'])]
     public function sign(Request $request, EntityManagerInterface $em): Response
     {
@@ -30,7 +31,7 @@ final class AuthController extends AbstractController
 
         $newUser = new User();
 
-        $salt = getenv('PASSWORD_SALT') ?: 'Boubou_Maxime';
+        $salt = md5($this->getParameter('app.password_salt'));
 
         $newUser->setEmail($data["email"]);
         $newUser->setPseudo($data["pseudo"]);
@@ -38,12 +39,11 @@ final class AuthController extends AbstractController
         $hashedPassword = md5($data['password'] . $salt);
         $newUser->setPassword($hashedPassword);
 
-        $random = bin2hex(random_bytes(16));
-        $token = hash('sha256', $data["email"] . $salt . $random);
-        $newUser->setToken($token);
-        $newUser->setSalt($salt);
+        $token = hash('sha256', $data["email"] . $salt  . uniqid());
+        $newUser->setCreatedAt(new \DateTimeImmutable());
 
-        $newUser->setRoles(["ROLE_USER"]);
+//        $newUser->setToken($token);
+//        $newUser->setSalt($salt);
 
         $em->persist($newUser);
         $em->flush();
@@ -51,13 +51,8 @@ final class AuthController extends AbstractController
         return $this->json([
             "status"=>"ok",
             "message"=>"user created",
-            "result"=> [
-                "id"=>$newUser->getId(),
-                "pseudo"=>$newUser->getPseudo(),
-                "token"=>$token,
-                "email"=>$newUser->getEmail()
-            ]
-        ]);
+            "result"=> $newUser
+        ], 200, [], ['groups' => ['user:sign']]);
     }
 
     #[Route('/user/login', name: 'app_auth_login', methods: ['POST'])]
@@ -74,7 +69,7 @@ final class AuthController extends AbstractController
             return $this->json(["status"=>"error", "message"=>"user not found"]);
         }
 
-        $salt = getenv('PASSWORD_SALT') ?: 'Boubou_Maxime';
+        $salt = md5($this->getParameter('app.password_salt'));
 
         if( md5(($data['password'] . $salt)) === $user->getPassword()){
             return $this->json([
@@ -83,7 +78,7 @@ final class AuthController extends AbstractController
                 "result"=>[
                     "id"=>$user->getId(),
                     "pseudo"=>$user->getPseudo(),
-                    "email"=>$user->getEmail()
+                    "email"=>$user->getEmail(),
                 ]
             ]);
         } else {
