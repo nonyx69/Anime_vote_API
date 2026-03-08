@@ -94,11 +94,16 @@ class User
 
         return $this;
     }
+    public function getRoles_admin(): array
+    {
 
+        return $this->roles;
+
+    }
     public function getRoles(): array
     {
 
-        //$this->roles[] = "ROLE_USER";
+        $this->roles[] = "ROLE_USER";
         return $this->roles;
 
     }
