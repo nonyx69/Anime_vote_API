@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\SondagesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SondagesRepository::class)]
 class Sondages
@@ -14,6 +15,7 @@ class Sondages
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['sondage:read'])]
     private ?string $name = null;
 
     #[ORM\Column]
