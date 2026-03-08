@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Choix;
 use App\Entity\Questions;
 use App\Entity\Sondages;
@@ -11,15 +10,30 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class AdminController extends AbstractController
 {
 
     #[Route('/api/admin/sondage', name: 'admin_sondage_create', methods: ['POST'])]
-    // #[IsGranted('ROLE_ADMIN')] // A modifier marche en commentaire mais pas dans le code
-    public function create(Request $request, EntityManagerInterface $em): Response
+    public function create(Request $request, EntityManagerInterface $em, \App\Repository\UserRepository $userRepo): Response
     {
+
+        $token = $request->headers->get('Authorization');
+
+        if(!$token){
+            return $this->json(["status"=>"error", "message"=>"token not found"]);
+        }
+
+        $token = substr($token, 7);
+
+        $user = $userRepo->findOneBy(['token' => $token]);
+
+        if (!$user || !in_array('ROLE_ADMIN', $user->getRoles())) {
+            return $this->json([
+                'error' => 'acces refuse tu doit etre admin'
+            ], 403);
+        }
+
         $data = json_decode($request->getContent(), true);
 
         $sondage = new Sondages();

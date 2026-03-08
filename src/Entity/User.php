@@ -98,7 +98,7 @@ class User
     public function getRoles(): array
     {
 
-        $this->roles[] = "ROLE_USER";
+        //$this->roles[] = "ROLE_USER";
         return $this->roles;
 
     }
