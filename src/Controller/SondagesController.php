@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class SondagesController extends AbstractController
 {
-    #[Route('/api/sondages', name: 'app_sondages_list', methods: ['GET'])]
+    #[Route('/api/sondages', name: 'app_sondages_list', methods: ['GET', 'OPTIONS'])]
     public function listActive(Request $request, SondagesRepository $repo, UserRepository $userRepo): Response
     {
 

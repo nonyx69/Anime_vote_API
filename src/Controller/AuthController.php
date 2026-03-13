@@ -19,7 +19,7 @@ final class AuthController extends AbstractController
         return md5($this->getParameter('app.password_salt'));
     }
 
-    #[Route('/user/sign', name: 'app_auth_sign', methods: ['POST'])]
+    #[Route('/user/sign', name: 'app_auth_sign', methods: ['POST', 'OPTIONS'])]
     public function sign(Request $request, EntityManagerInterface $em): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -57,7 +57,7 @@ final class AuthController extends AbstractController
         ], 200, [], ['groups' => ['user:sign']]);
     }
 
-    #[Route('/user/login', name: 'app_auth_login', methods: ['POST'])]
+    #[Route('/user/login', name: 'app_auth_login', methods: ['POST', 'OPTIONS'])]
     public function login(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -85,7 +85,7 @@ final class AuthController extends AbstractController
         }
     }
 
-    #[Route('/user/token', name: 'app_auth_token', methods: ['GET'])]
+    #[Route('/user/token', name: 'app_auth_token', methods: ['GET', 'OPTIONS'])]
     public function token(Request $request): Response
     {
         $token = $request->headers->get('Authorization');

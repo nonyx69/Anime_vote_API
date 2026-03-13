@@ -63,7 +63,7 @@ class Reponses
         return $this->idUser;
     }
 
-    public function setIdUser(string $idUser): static
+    public function  setIdUser(string $idUser): static
     {
         $this->idUser = $idUser;
 

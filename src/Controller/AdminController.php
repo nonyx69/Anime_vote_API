@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdminController extends AbstractController
 {
 
-    #[Route('/api/admin/sondage', name: 'admin_sondage_create', methods: ['POST'])]
+    #[Route('/api/admin/sondage', name: 'admin_sondage_create', methods: ['POST', 'OPTIONS'])]
     public function create(Request $request, EntityManagerInterface $em,UserRepository $userRepo): Response
     {
 

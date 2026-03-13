@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class ReponsesController extends AbstractController
 {
-    #[Route('/api/reponses/ajouter', name: 'app_reponses_add', methods: ['POST'])]
+    #[Route('/api/reponses/ajouter', name: 'app_reponses_add', methods: ['POST', 'OPTIONS'])]
     public function addReponse(Request $request, UserRepository $userRepo, QuestionsRepository $questionsRepo, ChoixRepository $choixRepo, EntityManagerInterface $em): Response
     {
         $token = $request->headers->get('Authorization');
